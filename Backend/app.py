@@ -8,7 +8,7 @@ import os
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:123456@localhost/Netropolis'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://root:QD23qWN0NTtFu0wMNNn2Zki8y9nLBrWv@dpg-cnbif98l6cac73egd8cg-a/netropolis'
 db = SQLAlchemy(app)
 
 
