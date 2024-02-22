@@ -82,7 +82,8 @@ function Dashboard(props) {
         <ul className="nav-links">
           <li><Link to='/login'>Login</Link></li>
           <li><Link to="/register">Register</Link></li>
-          
+          <li><Link to="/questList">Quest List</Link></li>
+          <li><Link to="/questSearch">Quest Search</Link></li>
           
         </ul>
       </nav>
