@@ -12,10 +12,10 @@ function Requests(props){
 
     useEffect(() => {
     
-        const s = io("localhost:5001/", {
+        const s = io("https://netropolis-backend.onrender.com/", {
           transports: ["websocket"],
           cors: {
-            origin: "http://localhost:3000/",
+            origin: "https://netropolis.onrender.com",
           },
         }); 
 
@@ -80,10 +80,10 @@ function Requests(props){
 
     useEffect(() => {
     
-        const s = io("localhost:5001/", {
+        const s = io("https://netropolis-backend.onrender.com/", {
           transports: ["websocket"],
           cors: {
-            origin: "http://localhost:3000/",
+            origin: "https://netropolis.onrender.com",
           },
         }); 
 
