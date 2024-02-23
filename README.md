@@ -1,12 +1,12 @@
 NETROPOLIS QUEST PLATFORM
 
-##Introduction
+#Introduction
 
 Netropolis is a platform designed to address labor shortages in rural areas by connecting users interested in experiencing rural life with local labor shortage tasks. The platform offers a package of quests that include leisure activities, local events, and labor tasks, providing users with an opportunity to actively engage in local communities like an RPG game.
 
 
 
-##Features
+#Features
 
 User authentication with login and registration forms.
 Displaying a dashboard with different functionalities based on user roles.
@@ -18,7 +18,7 @@ Managing requests for quests.
 Creating new quests.
 
 
-##Technologies Used
+#Technologies #Used
 
 React.js (Frontend)
 React Router
@@ -28,7 +28,7 @@ PostgreSQL (Database)
 
 
 
-##Prerequisites
+#Prerequisites
 
 Node.js
 React
@@ -37,7 +37,7 @@ PostgreSQL
 
 
 
-##INSTALLATION
+#INSTALLATION
 
 
 Clone the repository: git clone https://github.com/Samarthsinghal28/Netropolis
@@ -49,7 +49,7 @@ Start the React development server: npm start
 Start the Python server: python app.py
 
 
-##Usage
+#Usage
 
 1. Navigate to Register page and register as a manager ot user by providing your credentials.
 1. Navigate to the login page and authenticate with your credentials.
@@ -57,7 +57,7 @@ Start the Python server: python app.py
 3. Browse quests, register for them, search for specific quests, and manage your requests accordingly.
 
 
-##Contributing
+#Contributing
 
 Fork the repository
 Create a new branch
