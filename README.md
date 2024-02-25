@@ -8,31 +8,38 @@ Netropolis is a platform designed to address labor shortages in rural areas by c
 
 **Features**
 
-User authentication with login and registration forms.
-Displaying a dashboard with different functionalities based on user roles.
-Listing quests available for registration.
-Registering for quests.
-Scheduling teh quests.
-Searching for quests.
-Managing requests for quests.
-Creating new quests.
+1.User authentication with login and registration forms.
+2.Displaying a dashboard with different functionalities based on user roles.
+3.Listing quests available for registration.
+4.Registering for quests.
+5.Scheduling teh quests.
+6.Searching for quests.
+7.Managing requests for quests.
+8.Creating new quests.
 
 
 **Technologies Used**
 
-React.js (Frontend)
-React Router
-Python (Backend)
-Flask (Python web framework)
-PostgreSQL (Database)
+1.React.js (Frontend)
+
+2.React Router
+
+3.Python (Backend)
+
+4.Flask (Python web framework)
+
+5.PostgreSQL (Database)
 
 
 **Prerequisites**
 
-Node.js
-React
-Python
-PostgreSQL
+1.Node.js
+
+2.React
+
+3.Python
+
+4.PostgreSQL
 
 
 
@@ -40,28 +47,29 @@ PostgreSQL
 
 
 Clone the repository: git clone https://github.com/Samarthsinghal28/Netropolis
-Navigate to the frontend directory: cd frontend
-Install dependencies: npm install
-Navigate to the backend directory: cd ../backend
-Install Python dependencies: pip install -r requirements.txt
-Start the React development server: npm start
-Start the Python server: python app.py
+
+1. Navigate to the frontend directory: cd frontend
+2. Install dependencies: npm install
+3. Navigate to the backend directory: cd ../backend
+4. Install Python dependencies: pip install -r requirements.txt
+5. Start the React development server: npm start
+6. Start the Python server: python app.py
 
 
 **Usage**
 
 1. Navigate to Register page and register as a manager ot user by providing your credentials.
-1. Navigate to the login page and authenticate with your credentials.
-2. Explore the dashboard to access different functionalities based on your role.
-3. Browse quests, register for them, search for specific quests, and manage your requests accordingly.
+2. Navigate to the login page and authenticate with your credentials.
+3. Explore the dashboard to access different functionalities based on your role.
+4. Browse quests, register for them, search for specific quests, and manage your requests accordingly.
 
 
 **Contributing**
 
-Fork the repository
-Create a new branch
-Make your changes
-Submit a pull request
+1. Fork the repository
+2. Create a new branch
+3. Make your changes
+4.Submit a pull request
 
 
 License
