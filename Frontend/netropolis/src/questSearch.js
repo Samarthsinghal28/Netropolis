@@ -100,6 +100,12 @@ const QuestSearch = () => {
   };
 
   return (
+
+    <div>
+      <div className='header'>
+          <h1 className='header1'>Welcome to NetroPolis</h1>
+      <h3>A platform where adventure awaits!</h3>
+      </div>
     <div className="quest-search-container">
             <div className="search-header">
         <h2>Search Quests</h2> 
@@ -131,6 +137,7 @@ const QuestSearch = () => {
           </div>
         ))}
       </div>
+    </div>
     </div>
     </div>
   );

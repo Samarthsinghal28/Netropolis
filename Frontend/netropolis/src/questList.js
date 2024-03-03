@@ -140,42 +140,12 @@ const QuestList = (props) => {
   // }, []); // Set quests when component mounts
   // console.log(selectedQuestId);
   return (
+    <div>
     
-    // <div>
-    //   <h2>Available Quests</h2>
-    //   {/* {quests.map((quest) => (
-    //     <div key={quest.id}>
-    //       <h3>{quest.name}</h3>
-    //       <p>{quest.description}</p>
-    //       <button onClick={() => handleRegister(quest.id, 'User Name', 'user@example.com')}>Register</button>
-    //     </div>
-    //   ))} */}
-    //   {/* <div className='quest-list'>
-    //   {quests.map((quest) => (
-    //       <QuestCard1 key={quest.id} quest={quest} onRegister={handleRegister} />
-    //     ))}
-    //     </div> */}
-    //     <div className="quest-list">
-    //     {quests.map((quest) => (
-    //       <QuestCard1 key={quest.id} quest={quest} onRegisterClick={handleRegisterClick} />
-    //     ))}
-    //   </div>
-    //   {/* {selectedQuestId && (
-    //     <QuestRegisterForm1
-    //       questId={selectedQuestId}
-    //       onRegister={handleRegister}
-    //       onClose={() => setSelectedQuestId(null)} // Close the form when needed
-    //     />
-    //   )} */}
-      
-         
-    //   <h2>Registered Quests</h2>
-    //   <ul>
-    //     {registeredQuests.map((quest, index) => (
-    //       <li key={index}>{quest.user_name} registered for quest {quest.quest_id}</li>
-    //     ))}
-    //   </ul>
-    // </div>
+    <div className='header'>
+          <h1 className='header1'>Welcome to NetroPolis</h1>
+      <h3>A platform where adventure awaits!</h3>
+    </div>
 
     <div>
       
@@ -203,6 +173,7 @@ const QuestList = (props) => {
           </ul> */}
         </div>
       )}
+    </div>
     </div>
 
     

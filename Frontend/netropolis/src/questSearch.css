@@ -1,55 +1,13 @@
-/* QuestSearchForm.css
 
-.quest-search-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .quest-search-input {
-    flex: 1;
-    padding: 10px;
-    border: 2px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
-  }
-  
-  .quest-search-button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-  }
-  
-  .quest-search-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .quest-results {
-    margin-top: 20px;
-  }
-  
-  .quest-item {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .quest-item h3 {
-    margin-top: 0;
-    color: #007bff;
-  }
-   */
 
-   /* QuestSearchForm.css */
+.header{
+  background-color: #ccf43e;
+  
+}
 
-/* QuestSearchForm.css */
+.header1{
+  height: 60px;
+}
 
 .quest-search-container {
     text-align: center; /* Center-align the content */

@@ -1,5 +1,14 @@
 /* QuestCard.css */
 
+.header{
+  background-color: #ccf43e;
+  
+}
+
+.header1{
+  height: 60px;
+}
+
 .quest-card-container {
     display: flex; /* Use flexbox */
     flex-wrap: wrap; /* Allow cards to wrap to the next row if needed */
