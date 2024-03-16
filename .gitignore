@@ -4,6 +4,8 @@
 /Frontend/netropolis/node_modules
 /Frontend/netropolis//.pnp
 /Frontend/netropolis/.pnp.js
+/Frontend/netropolis/.env
+/Backend/.env
 
 # testing
 /coverage

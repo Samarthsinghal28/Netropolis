@@ -14,6 +14,8 @@ import QuestSearch from './questSearch';
 import Requests from './requests';
 import QuestCreate from './questCreate';
 import MyRequests from './myRequests';
+// import dotenv from 'dotenv';
+
 
 
 function App() {
@@ -24,16 +26,10 @@ function App() {
   const [emailID,setEmailId] = useState("");
   const [loginManager,setAsManager] = useState(false);
 
-
-  
-  
-
    const handleLogin = (e) => {
       // e.preventDefault();
       setIsAuthenticated(true);
     };
-
-   
 
     const handleSignOut = () => {
       // Perform sign out logic

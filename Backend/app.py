@@ -4,11 +4,14 @@ from sqlalchemy import text
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 from datetime import datetime
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://root:QD23qWN0NTtFu0wMNNn2Zki8y9nLBrWv@dpg-cnbif98l6cac73egd8cg-a/netropolis'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 
 

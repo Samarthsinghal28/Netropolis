@@ -20,10 +20,10 @@ function Register(){
   const navigate=useNavigate();
   useEffect(() => {
     
-    const s = io("https://netropolis-backend.onrender.com/", {
+    const s = io(process.env.REACT_APP_BACKEND_URL, {
       transports: ["websocket"],
       cors: {
-        origin: "https://netropolis.onrender.com",
+        origin: process.env.REACT_APP_FRONTEND_URL,
       },
     }); 
 
