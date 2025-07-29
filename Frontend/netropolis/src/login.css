@@ -1,81 +1,83 @@
- /* login.css  */
+To create a new authentication page, we will replace the existing CSS with styles suitable for a fresh design. Here's a new CSS structure for the authentication page:
 
-.login-container {
-    max-width: 100%;
-    padding: 20px;
-    margin-top: 30px;
-    border: 10px solid #ccc;
-    border-radius: 20px;
-    background-color: #f9f9f9;
-    margin: 0 auto;
-    justify-content: center; /* Horizontally center */
-    align-items: center; /* Vertically center */
-    /* place-items: center; */
-    /* padding: 20px; */
-    width: 400px;
-    /* height: 400px; */
-    
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
+```css
+/* New Authentication Page Styles */
+
+.auth-container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.auth-header {
     text-align: center;
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: flex-start; */
-    /* flex-direction: column; */
-    
-  }
-  
-   label {
-    /* display: block;
-    font-weight: bold; */
+    margin-bottom: 20px;
+}
+
+.auth-header h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.auth-form-group {
+    margin-bottom: 20px;
+}
+
+.auth-form-group label {
+    display: block;
     font-weight: bold;
     margin-bottom: 5px;
-  } 
-   
-  input[type="text"],
-  input[type="password"] {
-    width: 100%;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .login-button {
+    color: #555;
+}
+
+.auth-form-group input[type="text"],
+.auth-form-group input[type="password"] {
     width: 100%;
     padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 12px;
     border: none;
     border-radius: 5px;
-    background-color: #368af2;
+    background-color: #007bff;
     color: #fff;
+    font-size: 16px;
     cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #077df4;
-  }
+    transition: background-color 0.3s ease;
+}
 
-  .body1 {
-    /* font-family: Arial, sans-serif; */
-    background-color: #e3f2a6;
-    display: flex; 
-    justify-content: center; 
-    align-items: center;
-    height: 100%;
-  } 
+.auth-button:hover {
+    background-color: #0056b3;
+}
 
-  .form{
+.auth-footer {
     text-align: center;
-  }
+    margin-top: 20px;
+}
 
-  .header{
-    background-color: #ccf43e;
-    
-  }
+.auth-footer a {
+    color: #007bff;
+    text-decoration: none;
+}
 
-  .header1{
-    height: 60px;
-  }
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+```
 
- 
+### Explanation of Changes:
+- **Container**: The `.auth-container` class centers the form on the page with a fixed width and adds padding and a shadow for a card-like appearance.
+- **Header**: The `.auth-header` class styles the header of the form, including a title.
+- **Form Group**: The `.auth-form-group` class is used for each input field, with labels styled for clarity.
+- **Button**: The `.auth-button` class styles the submit button with a primary color and hover effect.
+- **Footer**: The `.auth-footer` class provides a place for additional links, such as "Forgot Password?" or "Sign Up", with hover effects for links.
+
+This new CSS provides a clean and modern look for the authentication page.

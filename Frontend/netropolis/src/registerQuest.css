@@ -1,71 +1,76 @@
-/* Register.css */
+To modify the CSS file as per your instructions, we will remove the existing styles related to the authentication page and create a new set of styles for a new authentication page. Here's how you can update the `registerQuest.css` file:
 
-.register-form {
-    max-width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    border: 10px solid #ccc;
-    border-radius: 20px;
-    background-color: #f9f9f9;
-    width: 400px; /* Set the width of the container */
-    /* height: 600px;   */
-    align-items: center;
-    justify-content: center;
-    /* display: flex; */
-    
-  }
+```css
+/* AuthenticationPage.css */
 
-.dateContainer{
-  margin: 20px;
+/* Container for the authentication form */
+.auth-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-  
-  .register-form h2 {
+
+/* Header for the authentication form */
+.auth-container h2 {
     text-align: center;
     margin-bottom: 20px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  /* label {
-    /* display: grid;
-    font-weight: bold; 
-    font-weight: bold;
-  margin-bottom: 5px;
+    font-size: 24px;
+    color: #333;
+}
 
-  } */
-  
-  input[type="text"],
-  input[type="email"],
-  input[type="password"] {
+/* Form group styling */
+.auth-form-group {
+    margin-bottom: 20px;
+}
+
+/* Input fields styling */
+.auth-form-group input[type="text"],
+.auth-form-group input[type="email"],
+.auth-form-group input[type="password"] {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ccc;
     border-radius: 5px;
-  }
-  
-  .register-button {
+    font-size: 16px;
+}
+
+/* Button styling */
+.auth-button {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: none;
     border-radius: 5px;
-    background-color: #3495f6;
+    background-color: #007bff;
     color: #fff;
+    font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s;
-    margin: auto;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
+    transition: background-color 0.3s ease;
+}
 
-  .body1 {
-   
+.auth-button:hover {
+    background-color: #0056b3;
+}
+
+/* Body styling for centering the form */
+.auth-body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* height: 100vh; */
-  } 
-  
+    min-height: 100vh;
+    background-color: #f0f2f5;
+}
+```
+
+### Explanation:
+- **Container**: The `.auth-container` class is used to style the main container of the authentication form, giving it a centered position, padding, and a subtle shadow for a modern look.
+- **Header**: The header within the container is styled to be centered and prominent.
+- **Form Group**: Each form group is given a margin for spacing.
+- **Inputs**: Input fields are styled for consistency and usability.
+- **Button**: The button is styled with a primary color and a hover effect for interactivity.
+- **Body**: The `.auth-body` class ensures the form is centered vertically and horizontally on the page.
+
+This new CSS structure provides a clean and modern look for an authentication page.

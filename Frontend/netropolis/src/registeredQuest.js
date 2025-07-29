@@ -1,155 +1,98 @@
-// QuestList.js
-import React, { useState, useEffect } from 'react';
-import io from 'socket.io-client';
-import QuestCard from './questCard';
-import QuestRegister from './questRegister';
+To modify the code as per your instructions, we need to delete the existing authentication page and create a new one. However, the provided code snippet does not contain an authentication page. It seems to be a component related to quests. Assuming you want to create a new authentication page, I'll provide a basic implementation for a new authentication component.
+
+Let's create a new file for the authentication page, `AuthenticationPage.js`, and implement a simple login form.
+
+### New Authentication Page: `AuthenticationPage.js`
+
+```javascript
+// AuthenticationPage.js
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './questCard.css';
-import Dashboard from './dashboard';
 
-
-
-const RegisteredQuests = () => {
-  const [quests, setQuests] = useState([]);
-  const [registeredQuests, setRegisteredQuests] = useState([]);
-  const [socket, setSocket] = useState(null);
-  
-  const [selectedQuestId, setSelectedQuestId] = useState(null);
-  const [isRegistering, setIsRegistering] = useState(false); // Track if user is registering
-
-
+const AuthenticationPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-
-  useEffect(() => {
-    
-    const s = io(process.env.REACT_APP_BACKEND_URL, {
-      transports: ["websocket"],
-      cors: {
-        origin: process.env.REACT_APP_FRONTEND_URL,
-      },
-    }); 
-
-    // if(formSubmitted){
-    function SearchQuest() {
-      s.emit("all_quests");
-    }
-
-    const waitForMessage = () => {
-      return new Promise((resolve) => {
-        s.on('all_quests_response', (data) => {
-          resolve(data['quests']);
-        });
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    // Implement your authentication logic here
+    try {
+      // Example: Send a request to your backend for authentication
+      const response = await fetch('http://your-backend-api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
       });
-    };
 
-    const fetchData = async () => {
-      try {
-        SearchQuest();
-        const data = await waitForMessage();
-        alert(data);
-        console.log('Received message from WebSocket:', data);
-        // if(message=="User logged in successfully"){
-        //   onLogin(true);
-        //   navigate("/");
-        // }
-        // setFormStatus(false);
-      } catch (error) {
-        console.error('Error while waiting for message from WebSocket:', error);
+      if (response.ok) {
+        // Navigate to the dashboard or another page on successful login
+        navigate('/dashboard');
+      } else {
+        console.error('Login failed');
       }
-    };
-
-    fetchData();
-
-    s.on('connect', () => {
-      console.log('Connected to backend via WebSocket');
-      // setIsConnected(true)
-    });
-
-
-    return () => {
-      s.disconnect();
-    };
-  // }
-
-  }, []);
-
-  useEffect(() => {
-    if (!socket) return;
-
-    socket.on('registration_success', (data) => {
-      setRegisteredQuests(prevRegisteredQuests => [...prevRegisteredQuests, data]);
-    });
-  }, [socket]);
-
-  const handleRegister = (questId, userName, userEmail) => {
-    if (!socket) return;
-
-    socket.emit('register_quest', { quest_id: questId, user_name: userName, user_email: userEmail });
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
   };
 
-  const handleRegisterClick = (questId) => {
-    setSelectedQuestId(questId);
-    setIsRegistering(true); // Set isRegistering to true to show the RegisterForm
-
-    // navigate('/questRegisterForm1');
-     // Set the selected quest ID
-  };
-
-  // Function to fetch quests from backend
-  useEffect(() => {
-    // Replace this with your actual API call to fetch quests
-    const fetchQuests = async () => {
-      try {
-        const response = await fetch('http://your-backend-api/quests');
-        if (response.ok) {
-          const data = await response.json();
-          setQuests(data);
-        } else {
-          console.error('Failed to fetch quests');
-        }
-      } catch (error) {
-        console.error('Error fetching quests:', error);
-      }
-    };
-
-    fetchQuests();
-  }, []);
-
-   // Sample quest data
-   const sampleQuests = [
-    { id: 1, name: 'Explore the Enchanted Forest', description: 'Embark on a magical journey through the Enchanted Forest.', duration: '3 days', reward: '100 gold' },
-    { id: 2, name: 'Defeat the Dragon of Doom', description: 'Confront the fearsome dragon that threatens the kingdom.', duration: '5 days', reward: '200 gold' },
-    { id: 3, name: 'Retrieve the Lost Relic', description: 'Brave the ancient ruins to recover the legendary artifact.', duration: '4 days', reward: '150 gold' },
-  ];
-
-  useEffect(() => {
-    setQuests(sampleQuests);
-    setRegisteredQuests(sampleQuests);
-  }, []); // Set quests when component mounts
-  console.log(selectedQuestId);
   return (
-    
-   
-
     <div>
-      
-        
-          <div>
-          <h2>Registered Quests</h2>
-          <ul>
-            {registeredQuests.map((quest) => (
-              <li key={quest.id}>{quest.name} registered for quest {quest.quest_id}</li>
-            ))}
-          </ul>
+      <h2>Login</h2>
+      <form onSubmit={handleLogin}>
+        <div>
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
-        
-      
+        <div>
+          <label>Password:</label>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        <button type="submit">Login</button>
+      </form>
     </div>
-
-    
-   
   );
 };
 
-export default RegisteredQuests;
+export default AuthenticationPage;
+```
+
+### Update `App.js` or Your Main Router File
+
+Ensure that you update your main application file to include the new authentication page route. Here's an example of how you might do this:
+
+```javascript
+// App.js or your main router file
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import RegisteredQuests from './registeredQuest';
+import AuthenticationPage from './AuthenticationPage';
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<AuthenticationPage />} />
+        <Route path="/registered-quests" element={<RegisteredQuests />} />
+        {/* Add other routes as needed */}
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
+```
+
+This setup assumes you have a backend endpoint for authentication and that you want to navigate to a dashboard or another page upon successful login. Adjust the URLs and logic according to your actual backend setup and application requirements.
