@@ -1,0 +1,72 @@
+To modify the code based on the given description, we need to create a new CSS file for the authentication page since the existing file does not exist. Here's how you can create a new CSS file for the authentication page:
+
+1. Navigate to the directory where you want to create the new CSS file.
+2. Create a new file named `authentication.css`.
+3. Add the necessary CSS styles for the authentication page.
+
+Here's an example of what the new `authentication.css` file might look like:
+
+```css
+/* File: repo/Frontend/netropolis/src/authentication.css */
+
+/* Basic reset for the authentication page */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Container for the authentication form */
+.auth-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+/* Styling for form elements */
+.auth-container input[type="text"],
+.auth-container input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.auth-container button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.auth-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Additional styles for links */
+.auth-container a {
+    display: block;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.auth-container a:hover {
+    text-decoration: underline;
+}
+```
+
+This CSS file provides basic styling for an authentication page, including a container for the form, input fields, a submit button, and links. You can further customize the styles to match your application's design requirements.

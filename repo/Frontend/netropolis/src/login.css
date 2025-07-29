@@ -1,0 +1,80 @@
+To create a new authentication page, you will need to create a new CSS file for styling the page. Since the existing `login.css` file does not exist, you can create a new file with the necessary styles for the authentication page.
+
+Here's an example of what the new `login.css` file might look like:
+
+```css
+/* File: repo/Frontend/netropolis/src/login.css */
+
+/* General styles for the authentication page */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.auth-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.auth-header h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-form input[type="text"],
+.auth-form input[type="password"] {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.auth-form button {
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.auth-form button:hover {
+    background-color: #0056b3;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-footer a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+```
+
+This CSS file provides basic styling for an authentication page, including styles for the container, form inputs, buttons, and links. You can adjust the styles as needed to fit the design of your application.
