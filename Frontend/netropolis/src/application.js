@@ -7,44 +7,53 @@ function Application() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (name.trim() && values.trim()) {
-            // Assuming you would send the data to a backend server for further processing
-            // In this example, we'll just log the data to the console
-            console.log("Applicant:", { name, values });
-            setStatusMessage("Application submitted successfully!");
-            setName('');
-            setValues('');
+        setStatusMessage('');
+
+        if (!name.trim() || !values.trim()) {
+            setStatusMessage('All fields are required.');
+            return;
+        }
+
+        // Simulate server request
+        fakeServerSubmit(name, values)
+            .then(response => {
+                if (response.success) {
+                    setStatusMessage('Submission successful!');
+                } else {
+                    setStatusMessage(response.message);
+                }
+            })
+            .catch(() => {
+                setStatusMessage('An error occurred. Please try again later.');
+            });
+    };
+
+    // Fake server submit function
+    const fakeServerSubmit = async (name, values) => {
+        // Simulate server delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (name === 'test' && values === '123') {
+            return { success: true };
         } else {
-            setStatusMessage("Please fill in all fields.");
+            return { success: false, message: 'Invalid submission data.' };
         }
     };
 
     return (
-        <div>
-            <h1>Rural Work Experience Program Application</h1>
+        <div className="application-container">
             <form onSubmit={handleSubmit}>
-                <label htmlFor="name">Name:</label><br />
-                <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                /><br /><br />
-
-                <label htmlFor="values">Values (e.g., community-oriented, environmentally-conscious, entrepreneurial):</label><br />
-                <input
-                    type="text"
-                    id="values"
-                    name="values"
-                    value={values}
-                    onChange={(e) => setValues(e.target.value)}
-                /><br /><br />
-
-                <button type="submit">Apply</button>
+                <h2>Application Form</h2>
+                {statusMessage && <p className="status">{statusMessage}</p>}
+                <div>
+                    <label>Name:</label>
+                    <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                </div>
+                <div>
+                    <label>Values:</label>
+                    <input type="text" value={values} onChange={(e) => setValues(e.target.value)} />
+                </div>
+                <button type="submit">Submit</button>
             </form>
-
-            <div>{statusMessage}</div>
         </div>
     );
 }
