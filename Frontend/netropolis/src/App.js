@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { io } from "socket.io-client";
@@ -14,71 +13,55 @@ import QuestSearch from './questSearch';
 import Requests from './requests';
 import QuestCreate from './questCreate';
 import MyRequests from './myRequests';
-// import dotenv from 'dotenv';
-
-
+import { login, logout, getCurrentUser } from './authService';
 
 function App() {
-  // const [loggedIn, setLoggedIn] = useState(false);
-  
-
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [emailID,setEmailId] = useState("");
-  const [loginManager,setAsManager] = useState(false);
+  const [emailID, setEmailId] = useState("");
+  const [loginManager, setAsManager] = useState(false);
 
-   const handleLogin = (e) => {
-      // e.preventDefault();
+  useEffect(() => {
+    const user = getCurrentUser();
+    if (user) {
       setIsAuthenticated(true);
-    };
+      setEmailId(user.email);
+    }
+  }, []);
 
-    const handleSignOut = () => {
-      // Perform sign out logic
-      setIsAuthenticated(false);
-    };
+  const handleLogin = async (email, password) => {
+    try {
+      const response = await login(email, password);
+      if (response.token) {
+        setIsAuthenticated(true);
+        setEmailId(email);
+      }
+    } catch (error) {
+      console.error('Login failed', error);
+    }
+  };
 
-    const handleRegister = () => {
-      // Perform register logic
-      setIsAuthenticated(true);
-    };
+  const handleSignOut = () => {
+    logout();
+    setIsAuthenticated(false);
+    setEmailId("");
+  };
 
-    const LoginRoute = ({ element }) => {
-      // Redirect to the dashboard if the user is already authenticated
-      return checkAuthentication() ? <Navigate to="/" /> : element;
-    };
-
-    const checkAuthentication = () => {
-      // Replace this logic with your actual authentication logic
-      return isAuthenticated;
-    };
-
-  
   return (
-     
     <Router>
       <div className="App">
-        
         <Routes>
-                <Route path="/login" element={<Login onLogin={setIsAuthenticated} setEmail={setEmailId} setManager={setAsManager} formStatus={isAuthenticated}/>} />
-
-        {/* <Route path="/login" element={<Login onLogin={setIsAuthenticated} setEmail={setEmailId} setManager={setAsManager}/>} /> */}
-        <Route path="/register" element={<Register/>} />
-        <Route path="/" element={<Dashboard formStatus={isAuthenticated} onLogout={setIsAuthenticated} email={emailID} manager={loginManager} />} />
-        <Route path="/questList" element={<QuestList formStatus={isAuthenticated} email={emailID}/>}/>
-        {/* <Route path="/questRegisterForm1" element={<QuestRegister/>}/> */}
-        {/* <Route path="/questSchedule" element={<QuestScheduling/>}/> */}
-        {/* <Route path="/registeredQuest" element={<RegisteredQuests/>}/> */}
-        <Route path="/questSearch" element={<QuestSearch/>}/>
-        <Route path="/requests" element = {<Requests email={emailID} formStatus={isAuthenticated} manager={loginManager}/>}/>
-        <Route path="/questCreate" element = {<QuestCreate formStatus={isAuthenticated} manager={loginManager}/>}/>     
-        <Route path="/myRequests" element = {<MyRequests email={emailID} formStatus={isAuthenticated} manager={loginManager}/>}/>  
-          
+          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/" element={<Dashboard formStatus={isAuthenticated} onLogout={handleSignOut} email={emailID} manager={loginManager} />} />
+          <Route path="/questList" element={<QuestList formStatus={isAuthenticated} email={emailID} />} />
+          <Route path="/questSearch" element={<QuestSearch />} />
+          <Route path="/requests" element={<Requests email={emailID} formStatus={isAuthenticated} manager={loginManager} />} />
+          <Route path="/questCreate" element={<QuestCreate formStatus={isAuthenticated} manager={loginManager} />} />
+          <Route path="/myRequests" element={<MyRequests email={emailID} formStatus={isAuthenticated} manager={loginManager} />} />
         </Routes>
-        
       </div>
     </Router>
-    
-    
   );
-    }
+}
 
 export default App;
