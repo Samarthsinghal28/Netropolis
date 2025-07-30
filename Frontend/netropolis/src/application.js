@@ -2,49 +2,79 @@ import React, { useState } from 'react';
 
 function Application() {
     const [name, setName] = useState('');
-    const [values, setValues] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [statusMessage, setStatusMessage] = useState('');
 
-    const handleSubmit = (event) => {
+    const validateEmail = (email) => {
+        const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        return re.test(email);
+    };
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        if (name.trim() && values.trim()) {
-            // Assuming you would send the data to a backend server for further processing
-            // In this example, we'll just log the data to the console
-            console.log("Applicant:", { name, values });
-            setStatusMessage("Application submitted successfully!");
-            setName('');
-            setValues('');
-        } else {
-            setStatusMessage("Please fill in all fields.");
+        setStatusMessage('');
+
+        if (!name.trim()) {
+            setStatusMessage('Name is required');
+            return;
+        }
+
+        if (!validateEmail(email)) {
+            setStatusMessage('Invalid email format');
+            return;
+        }
+
+        if (password.length < 6) {
+            setStatusMessage('Password must be at least 6 characters long');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password })
+            });
+
+            if (!response.ok) {
+                throw new Error('Registration failed');
+            }
+
+            setStatusMessage('Registration successful!');
+        } catch (error) {
+            setStatusMessage(error.message);
         }
     };
 
     return (
-        <div>
-            <h1>Rural Work Experience Program Application</h1>
+        <div className="application-container">
             <form onSubmit={handleSubmit}>
-                <label htmlFor="name">Name:</label><br />
+                <h2>Register</h2>
+                {statusMessage && <p className="status">{statusMessage}</p>}
                 <input
                     type="text"
-                    id="name"
-                    name="name"
+                    placeholder="Name"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                /><br /><br />
-
-                <label htmlFor="values">Values (e.g., community-oriented, environmentally-conscious, entrepreneurial):</label><br />
+                    required
+                />
                 <input
-                    type="text"
-                    id="values"
-                    name="values"
-                    value={values}
-                    onChange={(e) => setValues(e.target.value)}
-                /><br /><br />
-
-                <button type="submit">Apply</button>
+                    type="email"
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <button type="submit">Register</button>
             </form>
-
-            <div>{statusMessage}</div>
         </div>
     );
 }
