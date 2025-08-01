@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { io } from "socket.io-client";
@@ -9,76 +8,45 @@ import Register from './register';
 import QuestList from './questList';
 import QuestRegister from './questRegister';
 import QuestScheduling from './questSchedule';
-import RegisteredQuests from './registeredQuest';
-import QuestSearch from './questSearch';
-import Requests from './requests';
-import QuestCreate from './questCreate';
+import RegisteredQuests from './registeredQuests';
+import Profile from './profile';
 import MyRequests from './myRequests';
-// import dotenv from 'dotenv';
-
-
 
 function App() {
-  // const [loggedIn, setLoggedIn] = useState(false);
-  
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [emailID,setEmailId] = useState("");
-  const [loginManager,setAsManager] = useState(false);
+  useEffect(() => {
+    document.body.className = theme;
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
-   const handleLogin = (e) => {
-      // e.preventDefault();
-      setIsAuthenticated(true);
-    };
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
 
-    const handleSignOut = () => {
-      // Perform sign out logic
-      setIsAuthenticated(false);
-    };
-
-    const handleRegister = () => {
-      // Perform register logic
-      setIsAuthenticated(true);
-    };
-
-    const LoginRoute = ({ element }) => {
-      // Redirect to the dashboard if the user is already authenticated
-      return checkAuthentication() ? <Navigate to="/" /> : element;
-    };
-
-    const checkAuthentication = () => {
-      // Replace this logic with your actual authentication logic
-      return isAuthenticated;
-    };
-
-  
   return (
-     
-    <Router>
-      <div className="App">
-        
-        <Routes>
-                <Route path="/login" element={<Login onLogin={setIsAuthenticated} setEmail={setEmailId} setManager={setAsManager} formStatus={isAuthenticated}/>} />
-
-        {/* <Route path="/login" element={<Login onLogin={setIsAuthenticated} setEmail={setEmailId} setManager={setAsManager}/>} /> */}
-        <Route path="/register" element={<Register/>} />
-        <Route path="/" element={<Dashboard formStatus={isAuthenticated} onLogout={setIsAuthenticated} email={emailID} manager={loginManager} />} />
-        <Route path="/questList" element={<QuestList formStatus={isAuthenticated} email={emailID}/>}/>
-        {/* <Route path="/questRegisterForm1" element={<QuestRegister/>}/> */}
-        {/* <Route path="/questSchedule" element={<QuestScheduling/>}/> */}
-        {/* <Route path="/registeredQuest" element={<RegisteredQuests/>}/> */}
-        <Route path="/questSearch" element={<QuestSearch/>}/>
-        <Route path="/requests" element = {<Requests email={emailID} formStatus={isAuthenticated} manager={loginManager}/>}/>
-        <Route path="/questCreate" element = {<QuestCreate formStatus={isAuthenticated} manager={loginManager}/>}/>     
-        <Route path="/myRequests" element = {<MyRequests email={emailID} formStatus={isAuthenticated} manager={loginManager}/>}/>  
-          
-        </Routes>
-        
-      </div>
-    </Router>
-    
-    
+    <div className="App">
+      <header className="App-header">
+        <button onClick={toggleTheme}>
+          Switch to {theme === 'light' ? 'dark' : 'light'} mode
+        </button>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Navigate to="/dashboard" />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/quests" element={<QuestList />} />
+            <Route path="/quest-register" element={<QuestRegister />} />
+            <Route path="/quest-schedule" element={<QuestScheduling />} />
+            <Route path="/registered-quests" element={<RegisteredQuests />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/my-requests" element={<MyRequests />} />
+          </Routes>
+        </Router>
+      </header>
+    </div>
   );
-    }
+}
 
 export default App;
