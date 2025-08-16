@@ -6,12 +6,15 @@ from flask_socketio import SocketIO, emit
 from datetime import datetime
 from dotenv import load_dotenv
 import os
+import bcrypt
+import re
 
 load_dotenv()
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 db = SQLAlchemy(app)
 
 
@@ -20,6 +23,57 @@ db = SQLAlchemy(app)
 
 CORS(app, supports_credentials=True)
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+# Helper functions for authentication
+def hash_password(password):
+    """Hash a password using bcrypt"""
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(password.encode('utf-8'), salt)
+    return hashed.decode('utf-8')
+
+def verify_password(password, hashed):
+    """Verify a password against its hash"""
+    return bcrypt.checkpw(password.encode('utf-8'), hashed.encode('utf-8'))
+
+def validate_email(email):
+    """Validate email format"""
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    return re.match(pattern, email) is not None
+
+def validate_password(password):
+    """Validate password strength - at least 6 characters"""
+    return len(password) >= 6
+
+# Login attempt tracking (simple in-memory store for demo)
+login_attempts = {}
+
+def is_rate_limited(email):
+    """Check if user is rate limited (max 5 attempts per 15 minutes)"""
+    import time
+    current_time = time.time()
+    
+    if email not in login_attempts:
+        login_attempts[email] = []
+    
+    # Remove attempts older than 15 minutes
+    login_attempts[email] = [
+        attempt_time for attempt_time in login_attempts[email] 
+        if current_time - attempt_time < 900  # 15 minutes
+    ]
+    
+    return len(login_attempts[email]) >= 5
+
+def record_login_attempt(email):
+    """Record a failed login attempt"""
+    import time
+    if email not in login_attempts:
+        login_attempts[email] = []
+    login_attempts[email].append(time.time())
+
+def clear_login_attempts(email):
+    """Clear login attempts for successful login"""
+    if email in login_attempts:
+        del login_attempts[email]
 
 
 
@@ -47,16 +101,26 @@ def create_user(data):
     dob = data['dob']
     specialisation = data['specialisation']
 
-    with app.app_context():
+    # Validate input
+    if not validate_email(email):
+        emit('user_created', {'message': 'Invalid email format'})
+        return
+    
+    if not validate_password(password):
+        emit('user_created', {'message': 'Password must be at least 6 characters long'})
+        return
 
+    with app.app_context():
         query = text(' Select * from userdetails where emailid=:email')
         result = db.session.execute(query, {'email': email}).fetchall()
 
         if(len(result)==0):
-
+            # Hash the password before storing
+            hashed_password = hash_password(password)
+            
             # Execute the SQL query to create a new user
             query = text('INSERT INTO userdetails (firstname, lastname, password, emailid,specialisation, dob) VALUES (:first_name, :last_name, :password, :email, :specialisation, :dob)')
-            db.session.execute(query, {'first_name': first_name, 'last_name': last_name, 'password': password, 'email': email, 'specialisation' : specialisation, 'dob' : dob})
+            db.session.execute(query, {'first_name': first_name, 'last_name': last_name, 'password': hashed_password, 'email': email, 'specialisation' : specialisation, 'dob' : dob})
             db.session.commit()
             # Emit a message to the client confirming the user creation
             emit('user_created', {'message': 'User created successfully'})
@@ -75,16 +139,27 @@ def create_manager(data):
     dob = data['dob']
     specialisation = data['specialisation']
 
+    # Validate input
+    if not validate_email(email):
+        emit('user_created', {'message': 'Invalid email format'})
+        return
+    
+    if not validate_password(password):
+        emit('user_created', {'message': 'Password must be at least 6 characters long'})
+        return
+
     with app.app_context():
 
         query = text(' Select * from managerdetails where emailid=:email')
         result = db.session.execute(query, {'email': email}).fetchall()
 
         if(len(result)==0):
+            # Hash the password before storing
+            hashed_password = hash_password(password)
 
             # Execute the SQL query to create a new user
             query = text('INSERT INTO managerdetails (firstname, lastname, password, emailid,specialisation, dob) VALUES (:first_name, :last_name, :password, :email, :specialisation, :dob)')
-            db.session.execute(query, {'first_name': first_name, 'last_name': last_name, 'password': password, 'email': email, 'specialisation' : specialisation, 'dob' : dob})
+            db.session.execute(query, {'first_name': first_name, 'last_name': last_name, 'password': hashed_password, 'email': email, 'specialisation' : specialisation, 'dob' : dob})
             db.session.commit()
             # Emit a message to the client confirming the user creation
             emit('user_created', {'message': 'Manager created successfully'})
@@ -97,6 +172,20 @@ def login_user(details):
     email = details['email']
     password = details['password']
 
+    # Validate input
+    if not validate_email(email):
+        emit('login_result', {'message': 'Invalid email format'})
+        return
+    
+    if not password:
+        emit('login_result', {'message': 'Password is required'})
+        return
+
+    # Check rate limiting
+    if is_rate_limited(email):
+        emit('login_result', {'message': 'Too many login attempts. Please try again later.'})
+        return
+
     # Query the database to check if the username exists
     query = text('SELECT password FROM userdetails WHERE emailid=:email')
     result = db.session.execute(query, {'email': email}).fetchone()
@@ -104,12 +193,16 @@ def login_user(details):
     if result:
         # If the username exists, check if the password matches
         stored_password = result[0]  # Password retrieved from the database
-        if stored_password == password:
+        if verify_password(password, stored_password):
             session['username'] = email
+            session['user_type'] = 'user'
+            clear_login_attempts(email)  # Clear failed attempts on successful login
             emit('login_result', {'message': 'User logged in successfully'})
         else:
+            record_login_attempt(email)  # Record failed attempt
             emit('login_result', {'message': 'Incorrect password'})
     else:
+        record_login_attempt(email)  # Record failed attempt
         emit('login_result', {'message': 'User does not exist'})
 
 
@@ -120,6 +213,20 @@ def login_manager(details):
     email = details['email']
     password = details['password']
 
+    # Validate input
+    if not validate_email(email):
+        emit('login_manager', {'message': 'Invalid email format'})
+        return
+    
+    if not password:
+        emit('login_manager', {'message': 'Password is required'})
+        return
+
+    # Check rate limiting
+    if is_rate_limited(email):
+        emit('login_manager', {'message': 'Too many login attempts. Please try again later.'})
+        return
+
     # Query the database to check if the username exists
     query = text('SELECT password FROM managerdetails WHERE emailid=:email')
     result = db.session.execute(query, {'email': email}).fetchone()
@@ -127,12 +234,24 @@ def login_manager(details):
     if result:
         # If the username exists, check if the password matches
         stored_password = result[0]  # Password retrieved from the database
-        if stored_password == password:
+        if verify_password(password, stored_password):
+            session['username'] = email
+            session['user_type'] = 'manager'
+            clear_login_attempts(email)  # Clear failed attempts on successful login
             emit('login_manager', {'message': 'Manager logged in successfully'})
         else:
+            record_login_attempt(email)  # Record failed attempt
             emit('login_manager', {'message': 'Incorrect password'})
     else:
+        record_login_attempt(email)  # Record failed attempt
         emit('login_manager', {'message': 'Manager does not exist'})
+
+
+@socketio.on('logout')
+def logout():
+    """Handle user logout"""
+    session.clear()  # Clear all session data
+    emit('logout_result', {'message': 'Logged out successfully'})
 
 
 @socketio.on('create_quest')

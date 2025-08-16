@@ -3,7 +3,15 @@ import './login.css';
 import { io } from "socket.io-client";
 import { useNavigate } from 'react-router-dom';
 
+// Validation helper functions
+const validateEmail = (email) => {
+  const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return re.test(email);
+};
 
+const validatePassword = (password) => {
+  return password.length >= 6;
+};
 
 // function Login({ props.onLogin }) {
 function Login(props) {
@@ -11,6 +19,8 @@ function Login(props) {
     const [password, setPassword] = useState('');
     const [formSubmitted, setFormStatus]=useState(false);
     const [loginAsManager, setLoginAsManager] = useState(false);
+    const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleRadioChange = (event) => {
@@ -63,18 +73,31 @@ function Login(props) {
         try {
           SearchUser();
           const message = await waitForMessage();
-          alert(message);
           console.log('Received message from WebSocket:', message);
-          if(message=="User logged in successfully" || message=="Manager logged in successfully"){
-            props.onLogin(true);
-            props.setEmail(email);
-            props.setManager(loginAsManager);
-            // {console.log(props.formStatus)}
+          
+          if(message==="User logged in successfully" || message==="Manager logged in successfully"){
+            // Store authentication data in localStorage for persistence
+            const authData = {
+              email: email,
+              isManager: loginAsManager,
+              timestamp: Date.now()
+            };
+            localStorage.setItem('authData', JSON.stringify(authData));
+            
+            props.onLogin(true, email, loginAsManager);
+            alert(message);
             navigate("/");
+          } else {
+            alert(message);
           }
+          
+          setIsLoading(false);
           setFormStatus(false);
         } catch (error) {
           console.error('Error while waiting for message from WebSocket:', error);
+          alert('Connection error. Please try again.');
+          setIsLoading(false);
+          setFormStatus(false);
         }
       };
   
@@ -97,8 +120,31 @@ function Login(props) {
   
     const handleLogin = (e) => {
       e.preventDefault();
+      
+      // Clear previous errors
+      setErrors({});
+      
+      // Validate form
+      const newErrors = {};
+      if (!email) {
+        newErrors.email = 'Email is required';
+      } else if (!validateEmail(email)) {
+        newErrors.email = 'Please enter a valid email address';
+      }
+      
+      if (!password) {
+        newErrors.password = 'Password is required';
+      } else if (!validatePassword(password)) {
+        newErrors.password = 'Password must be at least 6 characters long';
+      }
+      
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        return;
+      }
+      
+      setIsLoading(true);
       setFormStatus(true);
-
     };
     
     return (
@@ -116,16 +162,21 @@ function Login(props) {
         <input
             type="checkbox"
             onChange={handleRadioChange}
+            disabled={isLoading}
           />
           <label>Login as Manager</label>
           <br/>
           <br/>
           <label>Email:</label>
           <input
-            type="text"
+            type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className={errors.email ? 'error' : ''}
+            disabled={isLoading}
+            required
           />
+          {errors.email && <div className="error-message">{errors.email}</div>}
         </div>
     
         <div className="form-group">
@@ -134,9 +185,20 @@ function Login(props) {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            className={errors.password ? 'error' : ''}
+            disabled={isLoading}
+            required
           />
+          {errors.password && <div className="error-message">{errors.password}</div>}
         </div>
-        <button className="login-button" type="submit" onClick={handleLogin}>Login</button>
+        <button 
+          className="login-button" 
+          type="submit" 
+          onClick={handleLogin}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Logging in...' : 'Login'}
+        </button>
       </form>
       <p className='form'>Don't have an account yet? <a href='./register'>Register</a></p>
       <p className='form'><a href='./'>Return to home page</a></p>

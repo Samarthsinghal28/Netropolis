@@ -6,6 +6,20 @@ import { io } from "socket.io-client";
 import 'react-datepicker/dist/react-datepicker.css';
 import { useNavigate } from 'react-router-dom';
 
+// Validation helper functions
+const validateEmail = (email) => {
+  const re = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  return re.test(email);
+};
+
+const validatePassword = (password) => {
+  return password.length >= 6;
+};
+
+const validateName = (name) => {
+  return name.trim().length >= 2;
+};
+
 // function Register({ onRegister }) {
 function Register(){
   const [firstName, setFirstName] = useState('');
@@ -17,6 +31,8 @@ function Register(){
   const [confirmPassword, setConfirmPassword] = useState('');
   const [formSubmitted, setFormStatus]= useState(false);
   const [loginAsManager, setLoginAsManager] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
   const navigate=useNavigate();
   useEffect(() => {
     
@@ -59,17 +75,21 @@ function Register(){
         const message = await waitForMessage();
         console.log('Received message from WebSocket:', message);
         
+        setIsLoading(false);
         setFormStatus(false);
-        if(message==="User created successfully"){
+        
+        if(message==="User created successfully" || message==="Manager created successfully"){
           alert(message);
           navigate("/login");
         }
         else{
           alert(message);
-          navigate('/login');
         }
       } catch (error) {
         console.error('Error while waiting for message from WebSocket:', error);
+        alert('Registration failed. Please try again.');
+        setIsLoading(false);
+        setFormStatus(false);
       }
     };
 
@@ -93,15 +113,47 @@ function Register(){
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // Clear previous errors
+    setErrors({});
+    
+    // Validate form
+    const newErrors = {};
+    
+    if (!validateName(firstName)) {
+      newErrors.firstName = 'First name must be at least 2 characters long';
+    }
+    
+    if (!validateName(lastName)) {
+      newErrors.lastName = 'Last name must be at least 2 characters long';
+    }
+    
+    if (!dateBirth) {
+      newErrors.dateBirth = 'Date of birth is required';
+    }
+    
+    if (!specialisation.trim()) {
+      newErrors.specialisation = 'Specialisation is required';
+    }
+    
+    if (!validateEmail(email)) {
+      newErrors.email = 'Please enter a valid email address';
+    }
+    
+    if (!validatePassword(password)) {
+      newErrors.password = 'Password must be at least 6 characters long';
+    }
+    
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
-    setFormStatus(true)
-    
-    // Perform registration logic here (e.g., validation, API call)
-    // For simplicity, let's just pass the form data to the parent component
-    // onRegister({ username, email, password });
+
+    setIsLoading(true);
+    setFormStatus(true);
   };
 
   const handleRadioChange = (event) => {
@@ -125,56 +177,61 @@ function Register(){
       <h2>Register</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
-          
           <input
             type="checkbox"
             onChange={handleRadioChange}
+            disabled={isLoading}
           />
-          <label>Resister as Manager</label>
+          <label>Register as Manager</label>
           <br/>
           <br/>
 
-          
           <label>First Name:</label>
           <input
             type="text"
-            value={ firstName}
-            pattern="[A-Za-z]{1,}"
+            value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
+            className={errors.firstName ? 'error' : ''}
+            disabled={isLoading}
             required
           />
+          {errors.firstName && <div className="error-message">{errors.firstName}</div>}
         </div>
         <div className="form-group">
           <label>Last Name:</label>
           <input
             type="text"
-            value={ lastName}
-            pattern="[A-Za-z]{1,}"
+            value={lastName}
             onChange={(e) => setLastName(e.target.value)}
+            className={errors.lastName ? 'error' : ''}
+            disabled={isLoading}
             required
           />
-
+          {errors.lastName && <div className="error-message">{errors.lastName}</div>}
         </div>
         <div className="form-group">
           <label>Date of Birth:</label>
           <input
             type="date"
-            value={ dateBirth}
+            value={dateBirth}
             onChange={(e) => setDateOfBirth(e.target.value)}
-            pattern="\d{4}/\d{2}/\d{2}"
-            placeholder="YYYY/MM/DD"
-            // placeholderText="MM/DD/YYYY"
+            className={errors.dateBirth ? 'error' : ''}
+            disabled={isLoading}
             required
           />
+          {errors.dateBirth && <div className="error-message">{errors.dateBirth}</div>}
         </div>
         <div className="form-group">
           <label>Specialisation:</label>
           <input
             type="text"
-            value={ specialisation}
+            value={specialisation}
             onChange={(e) => setSpecialization(e.target.value)}
+            className={errors.specialisation ? 'error' : ''}
+            disabled={isLoading}
             required
           />
+          {errors.specialisation && <div className="error-message">{errors.specialisation}</div>}
         </div>
         <div className="form-group">
           <label>Email:</label>
@@ -182,30 +239,43 @@ function Register(){
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            className={errors.email ? 'error' : ''}
+            disabled={isLoading}
             required
           />
+          {errors.email && <div className="error-message">{errors.email}</div>}
         </div>
         <div className="form-group">
-          <label>Password: (atleast 6 characters)</label>
+          <label>Password: (at least 6 characters)</label>
           <input
             type="password"
             value={password}
-            pattern=".{6,}"
             onChange={(e) => setPassword(e.target.value)}
+            className={errors.password ? 'error' : ''}
+            disabled={isLoading}
             required
           />
+          {errors.password && <div className="error-message">{errors.password}</div>}
         </div>
         <div className="form-group">
           <label>Confirm Password:</label>
           <input
             type="password"
             value={confirmPassword}
-            pattern=".{6,}"
             onChange={(e) => setConfirmPassword(e.target.value)}
+            className={errors.confirmPassword ? 'error' : ''}
+            disabled={isLoading}
             required
           />
+          {errors.confirmPassword && <div className="error-message">{errors.confirmPassword}</div>}
         </div>
-        <button className="register-button" type="submit">Register</button>
+        <button 
+          className="register-button" 
+          type="submit"
+          disabled={isLoading}
+        >
+          {isLoading ? 'Registering...' : 'Register'}
+        </button>
       </form>
       <p>Already have an account <a href='./login'>Login</a></p>
     </div>

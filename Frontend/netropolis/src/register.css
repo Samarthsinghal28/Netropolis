@@ -38,11 +38,24 @@
   
   input[type="text"],
   input[type="email"],
-  input[type="password"] {
+  input[type="password"],
+  input[type="date"] {
     width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+  }
+
+  input.error {
+    border-color: #ff4444;
+    background-color: #ffe6e6;
+  }
+
+  .error-message {
+    color: #ff4444;
+    font-size: 12px;
+    margin-top: 3px;
+    text-align: left;
   }
   
   .register-button {
@@ -54,6 +67,11 @@
     color: #fff;
     cursor: pointer;
     transition: background-color 0.3s;
+  }
+
+  .register-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
   }
   
   button:hover {

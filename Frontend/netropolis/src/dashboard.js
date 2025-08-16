@@ -4,10 +4,7 @@ import React from 'react';
 import './dashboard.css'; // Import CSS file for styling
 import { Link } from 'react-router-dom';
 import { io } from "socket.io-client";
-// import { useHistory } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import QuestScheduling from './questSchedule';
-import Login from './login';
 import Homepage from './Homepage';
 
 
@@ -19,10 +16,27 @@ function Dashboard(props) {
 
     const handleLogout = async () => {
       try {
-        props.onLogout(false);
-        navigate('/');
+        // Call backend logout
+        const s = io(process.env.REACT_APP_BACKEND_URL, {
+          transports: ["websocket"],
+          cors: {
+            origin: process.env.REACT_APP_FRONTEND_URL,
+          },
+        }); 
+        
+        s.emit('logout');
+        s.on('logout_result', (data) => {
+          console.log(data.message);
+        });
+        
+        // Clear frontend state
+        props.onLogout();
+        navigate('/login');
       } catch (error) {
         console.error('Error logging out:', error);
+        // Even if backend call fails, clear frontend state
+        props.onLogout();
+        navigate('/login');
       }
     };
 
